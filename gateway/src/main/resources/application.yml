@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: strangler-gateway
+  
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/sfaas
+    username: sfaas
+    password: sfaas123

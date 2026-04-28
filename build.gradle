@@ -1,0 +1,54 @@
+// Root build: centralize versions and common configuration for subprojects
+
+plugins {
+    id 'org.springframework.boot' version '4.0.6' apply false
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+group = 'org.barcodev'
+version = '0.0.1-SNAPSHOT'
+description = 'strangler-fig multi-module'
+
+ext {
+    javaVersion = 21
+    lombokVersion = '1.18.28'
+    springBootVersion = '4.0.6'
+    springCloudVersion = '2023.0.6'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    // Apply the dependency-management plugin in subprojects to make use of the centrally imported BOMs
+    apply plugin: 'io.spring.dependency-management'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+    }
+}
+
+// Centralized dependency management (import BOMs so subprojects don't need explicit versions)
+apply plugin: 'io.spring.dependency-management'
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+// Convenience task to build everything
+tasks.register('assembleAll') {
+    dependsOn subprojects.collect { it.tasks.matching { it.name == 'assemble' } }
+}

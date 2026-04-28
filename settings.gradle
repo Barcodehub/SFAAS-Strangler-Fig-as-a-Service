@@ -1,0 +1,25 @@
+rootProject.name = 'strangler-fig'
+
+// Include modules following the requested structure
+include(
+		':core',
+		':core:adapters:postgres',
+		':core:adapters:mysql',
+		':core:adapters:mongodb',
+		':gateway',
+		':admin-api',
+		':diff-engine',
+		':flag-engine',
+		':cdc-consumer'
+)
+
+// Map project directories to the workspace layout (folders will be created)
+project(':core').projectDir = file('core')
+project(':core:adapters:postgres').projectDir = file('core/adapters/postgres')
+project(':core:adapters:mysql').projectDir = file('core/adapters/mysql')
+project(':core:adapters:mongodb').projectDir = file('core/adapters/mongodb')
+project(':gateway').projectDir = file('gateway')
+project(':admin-api').projectDir = file('admin-api')
+project(':diff-engine').projectDir = file('diff-engine')
+project(':flag-engine').projectDir = file('flag-engine')
+project(':cdc-consumer').projectDir = file('cdc-consumer')
